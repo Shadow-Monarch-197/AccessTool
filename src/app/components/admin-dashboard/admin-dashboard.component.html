@@ -1,0 +1,54 @@
+<div class="container my-5 admin-dashboard">
+
+  <h2 class="mb-4 text-center text-primary">Admin Dashboard</h2>
+
+  <div class="d-flex justify-content-center mb-4">
+    <button class="btn btn-primary btn-lg" (click)="getAllUsers()">
+      <i class="bi bi-people-fill me-2"></i> Get All Users
+    </button>
+  </div>
+
+  <div *ngIf="alluserlist.length > 0; else noUsers">
+
+    <div class="table-responsive shadow rounded">
+      <table class="table table-striped table-hover align-middle mb-0">
+        <thead class="table-primary">
+          <tr>
+            <th>User ID</th>
+            <th>Name</th>
+            <th>Email</th>
+            <th>Role</th>
+            <th>Created Date</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr *ngFor="let user of alluserlist">
+            <td>{{ user.userid }}</td>
+            <td>{{ user.name }}</td>
+            <td>{{ user.email }}</td>
+            <td>
+              <span 
+                class="badge"
+                [ngClass]="{
+                  'bg-success': user.role === 'admin',
+                  'bg-secondary': user.role !== 'admin'
+                }"
+              >
+                {{ user.role | titlecase }}
+              </span>
+            </td>
+            <td>{{ user.createddate | date:'medium' }}</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+
+  </div>
+
+  <ng-template #noUsers>
+    <div class="alert alert-info text-center" role="alert">
+      No users to display. Click the button above to load users.
+    </div>
+  </ng-template>
+
+</div>

@@ -1,0 +1,14 @@
+
+.admin-dashboard {
+  max-width: 900px;
+  margin-left: auto;
+  margin-right: auto;
+}
+
+table.table {
+  font-size: 0.95rem;
+}
+
+button.btn {
+  min-width: 180px;
+}

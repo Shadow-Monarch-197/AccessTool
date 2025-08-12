@@ -1,0 +1,109 @@
+<div class="container d-flex justify-content-center align-items-center vh-100">
+  <div class="card p-4 shadow" style="width: 100%; max-width: 420px;">
+    <h2 class="text-center mb-4">{{ toggleForm ? 'Login' : 'Register' }}</h2>
+
+    <!-- Login Form -->
+    <form *ngIf="toggleForm" [formGroup]="loginForm" (ngSubmit)="onLogin()">
+      <!-- Email -->
+      <div class="mb-3">
+        <input
+          type="email"
+          formControlName="email"
+          placeholder="Email"
+          class="form-control"
+          [ngClass]="{'is-invalid': loginForm.get('email')?.touched && loginForm.get('email')?.invalid}"
+        />
+        <div class="text-danger mt-1" *ngIf="loginForm.get('email')?.touched && loginForm.get('email')?.errors?.['required']">
+          *Email is required
+        </div>
+        <div class="text-danger mt-1" *ngIf="loginForm.get('email')?.touched && loginForm.get('email')?.errors?.['email']">
+          *Enter a valid email
+        </div>
+      </div>
+
+      <!-- Password -->
+      <div class="mb-3">
+        <input
+          type="password"
+          formControlName="password"
+          placeholder="Password"
+          class="form-control"
+          [ngClass]="{'is-invalid': loginForm.get('password')?.touched && loginForm.get('password')?.invalid}"
+        />
+        <div class="text-danger mt-1" *ngIf="loginForm.get('password')?.touched && loginForm.get('password')?.errors?.['required']">
+          *Password is required
+        </div>
+      </div>
+
+      <button type="submit" class="btn btn-primary w-100">Login</button>
+      <p class="text-center mt-3">
+        Not a member?
+        <a href="#" (click)="toggleForm = false">Register here</a>
+      </p>
+    </form>
+
+    <!-- Register Form -->
+    <form *ngIf="!toggleForm" [formGroup]="registerForm" (ngSubmit)="onRegister()">
+      <!-- Name -->
+      <div class="mb-3">
+        <input
+          type="text"
+          formControlName="name"
+          placeholder="Full Name"
+          class="form-control"
+          [ngClass]="{'is-invalid': registerForm.get('name')?.touched && registerForm.get('name')?.invalid}"
+        />
+        <div class="text-danger mt-1" *ngIf="registerForm.get('name')?.touched && registerForm.get('name')?.errors?.['required']">
+          *Name is required
+        </div>
+      </div>
+
+      <!-- Email -->
+      <div class="mb-3">
+        <input
+          type="email"
+          formControlName="email"
+          placeholder="Email"
+          class="form-control"
+          [ngClass]="{'is-invalid': registerForm.get('email')?.touched && registerForm.get('email')?.invalid}"
+        />
+        <div class="text-danger mt-1" *ngIf="registerForm.get('email')?.touched && registerForm.get('email')?.errors?.['required']">
+          *Email is required
+        </div>
+        <div class="text-danger mt-1" *ngIf="registerForm.get('email')?.touched && registerForm.get('email')?.errors?.['email']">
+          *Enter a valid email
+        </div>
+      </div>
+
+      <!-- Mobile No (Optional) -->
+      <div class="mb-3">
+        <input
+          type="text"
+          formControlName="mobileno"
+          placeholder="Mobile Number (optional)"
+          class="form-control"
+        />
+      </div>
+
+      <!-- Password -->
+      <div class="mb-3">
+        <input
+          type="password"
+          formControlName="password"
+          placeholder="Password"
+          class="form-control"
+          [ngClass]="{'is-invalid': registerForm.get('password')?.touched && registerForm.get('password')?.invalid}"
+        />
+        <div class="text-danger mt-1" *ngIf="registerForm.get('password')?.touched && registerForm.get('password')?.errors?.['required']">
+          *Password is required
+        </div>
+      </div>
+
+      <button type="submit" class="btn btn-primary w-100">Register</button>
+      <p class="text-center mt-3">
+        Already a member?
+        <a href="#" (click)="toggleForm = true">Login here</a>
+      </p>
+    </form>
+  </div>
+</div>
