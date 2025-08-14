@@ -1,0 +1,8 @@
+.available-tests {
+  position: absolute;
+  top: 100px;
+  left: 50%;
+  width: 300px;
+  transform: translateX(-50%);
+  padding: 20px;
+}

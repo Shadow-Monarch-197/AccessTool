@@ -1,0 +1,13 @@
+.list-group-item {
+  border: 0;
+  border-bottom: 1px solid rgba(0, 0, 0, 0.06);
+  transition: background-color 0.12s ease;
+}
+
+.list-group-item:hover {
+  background-color: #f8f9fa; /* Light gray on hover */
+}
+
+.btn-success {
+  font-weight: 500;
+}

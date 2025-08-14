@@ -12,3 +12,17 @@ table.table {
 button.btn {
   min-width: 180px;
 }
+
+.link-wrapper {
+  display: flex;
+  justify-content: center;
+  margin-top: 40px; /* space after the admin dashboard */
+}
+
+.upload-link {
+  width: 300px;
+  padding: 12px 20px; /* adjust as needed */
+  text-align: center;
+}
+
+.table td, .table th{vertical-align: middle;}
