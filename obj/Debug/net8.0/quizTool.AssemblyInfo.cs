@@ -14,7 +14,7 @@ using System.Reflection;
 [assembly: System.Reflection.AssemblyCompanyAttribute("quizTool")]
 [assembly: System.Reflection.AssemblyConfigurationAttribute("Debug")]
 [assembly: System.Reflection.AssemblyFileVersionAttribute("1.0.0.0")]
-[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0")]
+[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+e13235f3aea5b9e9d12ba7767d3cbc33443e22b5")]
 [assembly: System.Reflection.AssemblyProductAttribute("quizTool")]
 [assembly: System.Reflection.AssemblyTitleAttribute("quizTool")]
 [assembly: System.Reflection.AssemblyVersionAttribute("1.0.0.0")]

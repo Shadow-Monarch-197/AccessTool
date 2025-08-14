@@ -143,3 +143,6 @@ D:\v-16\AssessTool\BackEnd\quizTool\bin\Debug\net8.0\Microsoft.IdentityModel.Pro
 D:\v-16\AssessTool\BackEnd\quizTool\bin\Debug\net8.0\Microsoft.IdentityModel.Protocols.OpenIdConnect.dll
 D:\v-16\AssessTool\BackEnd\quizTool\bin\Debug\net8.0\Microsoft.IdentityModel.Tokens.dll
 D:\v-16\AssessTool\BackEnd\quizTool\bin\Debug\net8.0\System.IdentityModel.Tokens.Jwt.dll
+D:\v-16\AssessTool\BackEnd\quizTool\bin\Debug\net8.0\ExcelDataReader.dll
+D:\v-16\AssessTool\BackEnd\quizTool\bin\Debug\net8.0\ExcelDataReader.DataSet.dll
+D:\v-16\AssessTool\BackEnd\quizTool\obj\Debug\net8.0\quizTool.sourcelink.json

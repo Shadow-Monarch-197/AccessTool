@@ -7,13 +7,63 @@ namespace quizTool.Models
         public QuizTool_Dbcontext(DbContextOptions<QuizTool_Dbcontext> options) : base(options) { }
 
         public DbSet<UserDataModel> Users { get; set; }
+        //public DbSet<Question> Questions => Set<Question>();
+        //public DbSet<Choice> Choices => Set<Choice>();
+        public DbSet<Test> Tests { get; set; }
+        public DbSet<Question> Questions { get; set; }
+        public DbSet<Option> Options { get; set; }
+        public DbSet<TestAttempt> TestAttempts { get; set; }
+        public DbSet<TestAttemptAnswer> TestAttemptAnswers { get; set; }
 
+
+        //protected override void OnModelCreating(ModelBuilder modelBuilder)
+        //{
+        //    modelBuilder.Entity<UserDataModel>()
+        //        .Property(u => u.role)
+        //        .HasDefaultValue("basic");
+
+        //    //modelBuilder.Entity<Question>(e =>
+        //    //{
+        //    //    e.HasKey(x => x.Id);
+        //    //    e.Property(x => x.Text).IsRequired();
+        //    //    e.HasMany(x => x.Choices)
+        //    //    .WithOne(x => x.Question)
+        //    //    .HasForeignKey(x => x.QuestionId)
+        //    //    .OnDelete(DeleteBehavior.Cascade);
+        //    //});
+
+        //    //modelBuilder.Entity<Choice>(e =>
+        //    //{
+        //    //    e.HasKey(x => x.Id);
+        //    //    e.Property(x => x.Text).IsRequired();
+        //    //});
+        //}
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
+            base.OnModelCreating(modelBuilder);
+
             modelBuilder.Entity<UserDataModel>()
-                .Property(u => u.role)
-                .HasDefaultValue("basic");
+            .Property(u => u.role)
+            .HasDefaultValue("basic");
+
+            modelBuilder.Entity<Question>()
+            .HasOne(q => q.Test)
+            .WithMany(t => t.Questions)
+            .HasForeignKey(q => q.TestId)
+            .OnDelete(DeleteBehavior.Cascade);
+
+            modelBuilder.Entity<Option>()
+            .HasOne(o => o.Question)
+            .WithMany(q => q.Options)
+            .HasForeignKey(o => o.QuestionId)
+            .OnDelete(DeleteBehavior.Cascade);
+
+            modelBuilder.Entity<TestAttemptAnswer>()
+            .HasOne(a => a.Attempt)
+            .WithMany(at => at.Answers)
+            .HasForeignKey(a => a.AttemptId)
+            .OnDelete(DeleteBehavior.Cascade);
         }
 
         public void SeedUsers()

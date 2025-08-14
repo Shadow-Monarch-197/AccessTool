@@ -6,6 +6,7 @@ using quizTool.Models;
 using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
 using System.Text;
+using Microsoft.AspNetCore.Authorization;
 
 namespace quizTool.Controllers
 {
@@ -49,6 +50,7 @@ namespace quizTool.Controllers
         //     });
         // }
 
+        [AllowAnonymous]
         [HttpPost("LoginUser")]
         public async Task<IActionResult> LoginUser([FromBody] LoginModel userobj)
         {
@@ -79,7 +81,7 @@ namespace quizTool.Controllers
             return Ok(response);
         }
 
-
+        [AllowAnonymous]
         [HttpPost("RegisterUser")]
         public async Task<IActionResult> RegisterUser([FromBody] UserDataModel newUser)
         {
@@ -103,6 +105,7 @@ namespace quizTool.Controllers
             return Ok(new { message = "User registered successfully." });
         }
 
+        [Authorize(Roles = "admin")]
         [HttpGet("GetAllUsers")]
         public async Task<IActionResult> GetAllUsers()
         {
