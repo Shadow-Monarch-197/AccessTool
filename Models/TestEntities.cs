@@ -3,6 +3,12 @@ using System.ComponentModel.DataAnnotations.Schema;
 
 namespace quizTool.Models
 {
+
+    public enum QuestionType
+    {
+        Objective = 0,
+        Subjective = 1
+    }
     public class Test
     {
         [Key, DatabaseGenerated(DatabaseGeneratedOption.Identity)]
@@ -23,6 +29,15 @@ namespace quizTool.Models
 
         [Required]
         public string Text { get; set; }
+
+        // NEW: objective/subjective (default objective)
+        public QuestionType Type { get; set; } = QuestionType.Objective;
+
+        // NEW: optional reference/model answer for subjective questions
+        public string? ModelAnswer { get; set; }
+
+        // NEW: optional image URL for the question
+        public string? ImageUrl { get; set; }
 
         [ForeignKey(nameof(Test))]
         public int TestId { get; set; }
@@ -76,5 +91,8 @@ namespace quizTool.Models
         public int QuestionId { get; set; }
         public int? SelectedOptionId { get; set; }
         public bool IsCorrect { get; set; }
+
+
+        public string? SubjectiveText { get; set; }
     }
 }

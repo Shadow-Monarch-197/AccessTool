@@ -1,23 +1,23 @@
 {
   "format": 1,
   "restore": {
-    "D:\\v-16\\AssessTool\\BackEnd\\quizTool\\quizTool.csproj": {}
+    "D:\\AccessTool\\QuizTool_BackEnd\\AccessTool\\quizTool.csproj": {}
   },
   "projects": {
-    "D:\\v-16\\AssessTool\\BackEnd\\quizTool\\quizTool.csproj": {
+    "D:\\AccessTool\\QuizTool_BackEnd\\AccessTool\\quizTool.csproj": {
       "version": "1.0.0",
       "restore": {
-        "projectUniqueName": "D:\\v-16\\AssessTool\\BackEnd\\quizTool\\quizTool.csproj",
+        "projectUniqueName": "D:\\AccessTool\\QuizTool_BackEnd\\AccessTool\\quizTool.csproj",
         "projectName": "quizTool",
-        "projectPath": "D:\\v-16\\AssessTool\\BackEnd\\quizTool\\quizTool.csproj",
-        "packagesPath": "C:\\Users\\SEZ6841\\.nuget\\packages\\",
-        "outputPath": "D:\\v-16\\AssessTool\\BackEnd\\quizTool\\obj\\",
+        "projectPath": "D:\\AccessTool\\QuizTool_BackEnd\\AccessTool\\quizTool.csproj",
+        "packagesPath": "C:\\Users\\omsap\\.nuget\\packages\\",
+        "outputPath": "D:\\AccessTool\\QuizTool_BackEnd\\AccessTool\\obj\\",
         "projectStyle": "PackageReference",
         "fallbackFolders": [
           "C:\\Program Files (x86)\\Microsoft Visual Studio\\Shared\\NuGetPackages"
         ],
         "configFilePaths": [
-          "C:\\Users\\SEZ6841\\AppData\\Roaming\\NuGet\\NuGet.Config",
+          "C:\\Users\\omsap\\AppData\\Roaming\\NuGet\\NuGet.Config",
           "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.FallbackLocation.config",
           "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.Offline.config"
         ],
@@ -50,6 +50,10 @@
         "net8.0": {
           "targetAlias": "net8.0",
           "dependencies": {
+            "ClosedXML": {
+              "target": "Package",
+              "version": "[0.102.4, )"
+            },
             "ExcelDataReader": {
               "target": "Package",
               "version": "[3.7.0, )"

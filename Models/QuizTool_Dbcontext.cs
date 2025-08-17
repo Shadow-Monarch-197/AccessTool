@@ -16,28 +16,6 @@ namespace quizTool.Models
         public DbSet<TestAttemptAnswer> TestAttemptAnswers { get; set; }
 
 
-        //protected override void OnModelCreating(ModelBuilder modelBuilder)
-        //{
-        //    modelBuilder.Entity<UserDataModel>()
-        //        .Property(u => u.role)
-        //        .HasDefaultValue("basic");
-
-        //    //modelBuilder.Entity<Question>(e =>
-        //    //{
-        //    //    e.HasKey(x => x.Id);
-        //    //    e.Property(x => x.Text).IsRequired();
-        //    //    e.HasMany(x => x.Choices)
-        //    //    .WithOne(x => x.Question)
-        //    //    .HasForeignKey(x => x.QuestionId)
-        //    //    .OnDelete(DeleteBehavior.Cascade);
-        //    //});
-
-        //    //modelBuilder.Entity<Choice>(e =>
-        //    //{
-        //    //    e.HasKey(x => x.Id);
-        //    //    e.Property(x => x.Text).IsRequired();
-        //    //});
-        //}
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
@@ -64,6 +42,24 @@ namespace quizTool.Models
             .WithMany(at => at.Answers)
             .HasForeignKey(a => a.AttemptId)
             .OnDelete(DeleteBehavior.Cascade);
+
+            modelBuilder.Entity<Question>()
+                .Property(q => q.Type)
+                .HasConversion<int>()                              // store enum as int
+                .HasDefaultValue(QuestionType.Objective);
+
+
+            modelBuilder.Entity<Question>()
+                .Property(q => q.ModelAnswer)
+                .HasColumnType("text");
+
+            modelBuilder.Entity<Question>()
+                .Property(q => q.ImageUrl)
+                .HasColumnType("text");
+
+            modelBuilder.Entity<TestAttemptAnswer>()
+                .Property(a => a.SubjectiveText)
+                .HasColumnType("text");
         }
 
         public void SeedUsers()

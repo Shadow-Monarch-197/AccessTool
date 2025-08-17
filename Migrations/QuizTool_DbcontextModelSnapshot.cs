@@ -55,12 +55,23 @@ namespace quizTool.Migrations
 
                     NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("Id"));
 
+                    b.Property<string>("ImageUrl")
+                        .HasColumnType("text");
+
+                    b.Property<string>("ModelAnswer")
+                        .HasColumnType("text");
+
                     b.Property<int>("TestId")
                         .HasColumnType("integer");
 
                     b.Property<string>("Text")
                         .IsRequired()
                         .HasColumnType("text");
+
+                    b.Property<int>("Type")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("integer")
+                        .HasDefaultValue(0);
 
                     b.HasKey("Id");
 
@@ -140,6 +151,9 @@ namespace quizTool.Migrations
 
                     b.Property<int?>("SelectedOptionId")
                         .HasColumnType("integer");
+
+                    b.Property<string>("SubjectiveText")
+                        .HasColumnType("text");
 
                     b.HasKey("Id");
 

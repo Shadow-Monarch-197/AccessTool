@@ -2,6 +2,7 @@ using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.IdentityModel.Tokens;
+using Microsoft.OpenApi.Models;
 using quizTool.Models;
 using System.Text;
 
@@ -81,6 +82,9 @@ else
 //app.MapGet("/health", () => "Healthy");
 
 app.UseHttpsRedirection();
+app.UseStaticFiles();
+Directory.CreateDirectory(Path.Combine(app.Environment.WebRootPath ?? "wwwroot", "uploads"));
+
 
 app.UseAuthentication();
 app.UseAuthorization();

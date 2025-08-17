@@ -26,6 +26,13 @@
     {
         public int Id { get; set; }
         public string Text { get; set; }
+
+        // NEW: "objective" or "subjective"
+        public string Type { get; set; } = "objective";
+
+        // NEW: optional question image (served from /uploads/…)
+        public string? ImageUrl { get; set; }
+
         public List<OptionDto> Options { get; set; }
     }
 
@@ -47,6 +54,9 @@
     {
         public int QuestionId { get; set; }
         public int? SelectedOptionId { get; set; }
+
+        // NEW: For subjective questions (free-text response)
+        public string? SubjectiveText { get; set; }
     }
 
     public class AttemptResultDto
@@ -55,4 +65,6 @@
         public int Score { get; set; }
         public int Total { get; set; }
     }
+
+
 }
