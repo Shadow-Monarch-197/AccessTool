@@ -65,6 +65,92 @@
         public int Score { get; set; }
         public int Total { get; set; }
     }
+    //// ====== Admin: Attempts list ======
+
+    //// NEW: used by GET /api/Tests/attempts
+    public class AttemptListItemDto
+    {
+        public int Id { get; set; }
+        public int TestId { get; set; }
+        public string TestTitle { get; set; } = "";
+        public string UserEmail { get; set; } = "";
+        public int Score { get; set; }
+        public int Total { get; set; }
+        public int Percent { get; set; }
+        public DateTime AttemptedAt { get; set; }
+    }
+
+    //// ====== Admin: Attempt detail (to review subjective answers) ======
+
+    //// NEW: shape for a single attempt with all answers expanded
+    //public class AttemptDetailDto
+    //{
+    //    public int AttemptId { get; set; }
+    //    public int TestId { get; set; }
+    //    public string TestTitle { get; set; } = "";
+    //    public string UserEmail { get; set; } = "";
+    //    public int Score { get; set; }
+    //    public int Total { get; set; }
+    //    public DateTime AttemptedAt { get; set; }
+    //    public List<AttemptAnswerDetailDto> Answers { get; set; } = new();
+    //}
+
+    //// NEW: each answer row in AttemptDetailDto
+    //public class AttemptAnswerDetailDto
+    //{
+    //    public int QuestionId { get; set; }
+    //    public string QuestionText { get; set; } = "";
+    //    public string Type { get; set; } = "objective";   // "objective" | "subjective"
+    //    public string? ImageUrl { get; set; }
+
+    //    // Objective
+    //    public int? SelectedOptionId { get; set; }
+    //    public string? SelectedOptionText { get; set; }
+    //    public bool? IsCorrect { get; set; }
+    //    public string? CorrectOptionText { get; set; }     // helpful for admin review
+
+    //    // Subjective
+    //    public string? SubjectiveText { get; set; }
+    //    public string? ModelAnswer { get; set; }           // optional reference for admin
+    //}
+
+    //// ====== Admin: Update score after review ======
+
+    //// NEW: used by POST /api/Tests/attempts/{attemptId}/score
+    //public class UpdateAttemptScoreDto
+    //{
+    //    public int AttemptId { get; set; }
+    //    public int NewScore { get; set; }
+    //}
+
+    //// ====== Admin: View a test with answers (including correct flags) ======
+
+    //// NEW: used by GET /api/Tests/{id}/admin-view
+    //public class AdminTestViewDto
+    //{
+    //    public int Id { get; set; }
+    //    public string Title { get; set; } = "";
+    //    public List<AdminQuestionViewDto> Questions { get; set; } = new();
+    //}
+
+    //// NEW
+    //public class AdminQuestionViewDto
+    //{
+    //    public int Id { get; set; }
+    //    public string Text { get; set; } = "";
+    //    public string Type { get; set; } = "objective";
+    //    public string? ImageUrl { get; set; }
+    //    public string? ModelAnswer { get; set; }
+    //    public List<AdminOptionViewDto> Options { get; set; } = new();
+    //}
+
+    //// NEW
+    //public class AdminOptionViewDto
+    //{
+    //    public int Id { get; set; }
+    //    public string Text { get; set; } = "";
+    //    public bool IsCorrect { get; set; }
+    //}
 
 
 }
