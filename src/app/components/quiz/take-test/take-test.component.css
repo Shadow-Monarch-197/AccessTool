@@ -120,57 +120,64 @@
   border-radius: 999px;
   overflow: hidden;
 }
-
 .progress .progress-bar {
   transition: width 0.2s ease;
 }
 
-/* --- NEW: question header layout + perfect circular number --- */
+/* Header layout + circular number */
 .q-header {
   display: flex;
   align-items: center;
   gap: 12px;
 }
-
 .q-index {
   width: 36px;
   height: 36px;
-  flex: 0 0 36px;             /* keep it square in flex layouts */
+  flex: 0 0 36px;
   border-radius: 50%;
   display: inline-flex;
   align-items: center;
   justify-content: center;
   font-weight: 700;
   font-size: 0.95rem;
-  line-height: 1;             /* prevents vertical stretch */
-  padding: 0;                 /* IMPORTANT: no padding so it stays circular */
-  background: #e7f1ff;        /* light primary */
-  color: #0d6efd;             /* primary */
+  line-height: 1;
+  padding: 0;
+  background: #e7f1ff;
+  color: #0d6efd;
   box-shadow: inset 0 0 0 1px rgba(13, 110, 253, 0.12);
 }
 
-/* Highlight unanswered questions after submit */
+/* Question images */
+.q-image {
+  max-height: 280px;
+  object-fit: contain;
+  background: #fff;
+}
+
+/* Highlight unanswered */
 .question-card.q-error {
   border: 1px solid #dc3545 !important;
 }
-
 .question-card.q-error .q-index {
   background: #ffe5e9 !important;
   color: #dc3545 !important;
   box-shadow: inset 0 0 0 1px rgba(220, 53, 69, 0.35);
 }
 
-/* (Optional) slightly tighten list item interaction */
+/* Radios hover/checked */
 .card .list-group-item {
   cursor: pointer;
   user-select: none;
 }
-
 .card .list-group-item:hover {
   background-color: #f1f9ff;
 }
-
 .card .form-check-input:checked {
   background-color: #0d6efd;
   border-color: #0d6efd;
+}
+
+/* Subjective invalid state */
+textarea.is-invalid {
+  border-color: #dc3545;
 }

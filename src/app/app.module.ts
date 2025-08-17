@@ -15,6 +15,7 @@ import { UserService } from './services/user.service';
 import { AdminUploadComponent } from './components/quiz/admin-upload/admin-upload.component';
 import { UserTestsComponent } from './components/quiz/user-tests/user-tests.component';
 import { TakeTestComponent } from './components/quiz/take-test/take-test.component';
+import { AdminCreateQuestionComponent } from './components/quiz/admin-create-question/admin-create-question.component';
 // import { ImportQuestionsComponent } from './components/import-questions/import-questions.component';
 
 @NgModule({
@@ -26,6 +27,7 @@ import { TakeTestComponent } from './components/quiz/take-test/take-test.compone
     AdminUploadComponent,
     UserTestsComponent,
     TakeTestComponent,
+    AdminCreateQuestionComponent,
     // ImportQuestionsComponent
   ],
   imports: [

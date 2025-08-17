@@ -23,6 +23,35 @@ export interface TestSummary {
   createdAt: string;
 }
 
+// NEW: shapes for submit payloads and admin question creation
+export interface SubmitAnswer {
+  questionId: number;
+  selectedOptionId?: number | null;  // objective
+  subjectiveText?: string | null;    // subjective
+}
+
+
+export interface SubmitAttemptBody {
+  testId: number;
+  userEmail: string;
+  answers: SubmitAnswer[];
+}
+
+
+export type QuestionTypeStr = 'objective' | 'subjective';
+
+export interface AddQuestionPayload {
+  type: QuestionTypeStr;
+  text: string;
+  // objective
+  options?: string[];
+  correctIndex?: number; // 0-based
+  // subjective
+  modelAnswer?: string;
+  // optional image for either type
+  image?: File;
+}
+
 
 @Injectable({ providedIn: 'root' })
 export class QuizService {
@@ -47,10 +76,11 @@ export class QuizService {
   getTest(id: number): Observable<any> {
     return this.http.get(`${this.base}/Tests/${id}`);
   }
+//NEW
+   submitAttempt(body: SubmitAttemptBody): Observable<any> {
+    return this.http.post(`${this.base}/Tests/submit`, body);
+  }
 
-  submitAttempt(body: { testId: number; userEmail: string; answers: { questionId: number; selectedOptionId?: number }[] }): Observable<any> {
-    return this.http.post(`${this.base}/Tests/submit`, body);
-  }
 
   deleteTest(id: number) {
     return this.http.delete(`${this.base}/Tests/${id}`);
@@ -65,5 +95,34 @@ getAttempts(testId?: number) {
 getTests() {
   return this.http.get<TestSummary[]>(`${this.base}/Tests`);
 }
+
+ // ===== NEW admin helpers =====
+
+  /** Create an empty test with a title (admin) */
+  createTest(title: string): Observable<TestSummary> {
+    return this.http.post<TestSummary>(`${this.base}/Tests`, { title });
+  }
+
+  /** Add a question (objective/subjective) to a test (admin) */
+  addQuestionToTest(testId: number, payload: AddQuestionPayload): Observable<{ questionId: number }> {
+    const fd = new FormData();
+    fd.append('type', payload.type);
+    fd.append('text', payload.text);
+
+    if (payload.type === 'objective') {
+      (payload.options ?? []).forEach(o => fd.append('options', o));
+      if (payload.correctIndex !== undefined && payload.correctIndex !== null) {
+        fd.append('correctIndex', String(payload.correctIndex));
+      }
+    } else {
+      if (payload.modelAnswer) fd.append('modelAnswer', payload.modelAnswer);
+    }
+
+    if (payload.image) {
+      fd.append('image', payload.image, payload.image.name);
+    }
+
+    return this.http.post<{ questionId: number }>(`${this.base}/Tests/${testId}/questions`, fd);
+  }
 
 }

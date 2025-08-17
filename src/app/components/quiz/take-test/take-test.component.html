@@ -343,113 +343,125 @@
 
 
 <div *ngIf="test" class="container py-5">
-  <div class="row justify-content-center">
-    <div class="col-lg-10 col-xl-9">
+  <div class="row justify-content-center">
+    <div class="col-lg-10 col-xl-9">
 
-      <!-- Header -->
-      <div class="d-flex align-items-center justify-content-between mb-4">
-        <div>
-          <h2 class="h3 mb-1 fw-semibold text-primary">{{ test.title }}</h2>
-        </div>
-        <div class="text-muted small">{{ test.questions?.length || 0 }} Questions</div>
-      </div>
+      <!-- Header -->
+      <div class="d-flex align-items-center justify-content-between mb-4">
+        <h2 class="h3 mb-0 fw-semibold text-primary">{{ test.title }}</h2>
+        <div class="text-muted small">{{ test.questions?.length || 0 }} Questions</div>
+      </div>
 
-      <!-- Progress -->
-      <div class="mb-4">
-        <div class="d-flex justify-content-between mb-1">
-          <small class="text-muted">Progress</small>
-          <small class="fw-medium">{{ selectedCount || 0 }} / {{ test.questions?.length || 0 }}</small>
-        </div>
-        <div class="progress shadow-sm">
-          <div
-            class="progress-bar bg-primary"
-            role="progressbar"
-            [style.width.%]="((selectedCount || 0) * 100) / (test.questions?.length || 1)">
-          </div>
-        </div>
-      </div>
+      <!-- Progress -->
+      <div class="mb-4">
+        <div class="d-flex justify-content-between mb-1">
+          <small class="text-muted">Progress</small>
+          <small class="fw-medium">{{ selectedCount || 0 }} / {{ test.questions?.length || 0 }}</small>
+        </div>
+        <div class="progress shadow-sm">
+          <div class="progress-bar bg-primary"
+               role="progressbar"
+               [style.width.%]="((selectedCount || 0) * 100) / (test.questions?.length || 1)">
+          </div>
+        </div>
+      </div>
 
-      <!-- Questions -->
-      <div class="vstack gap-4">
-        <div
-          *ngFor="let q of test.questions; let i = index"
-          class="card shadow-sm question-card"
-          [class.q-error]="showErrors && !isAnswered(q.id)"
-          [attr.id]="'q-' + q.id"
-        >
-          <div class="card-body p-4">
+      <!-- Questions -->
+      <div class="vstack gap-4">
+        <div *ngFor="let q of test.questions; let i = index"
+             class="card shadow-sm question-card"
+             [class.q-error]="showErrors && !isAnswered(q)"
+             [attr.id]="'q-' + q.id">
 
-            <!-- REPLACED HEADER: was a Bootstrap badge with padding (ellipse). Now a fixed circle. -->
-            <div class="q-header mb-3">
-              <span class="q-index">{{ i + 1 }}</span>
-              <h5 class="mb-0 fw-semibold">{{ q.text }}</h5>
-            </div>
-            <!-- /REPLACED HEADER -->
+          <div class="card-body p-4">
 
-            <div class="list-group">
-              <label *ngFor="let o of q.options" class="list-group-item list-group-item-action d-flex align-items-start">
-                <input class="form-check-input me-3 mt-1"
-                       type="radio"
-                       [name]="'q_' + q.id"
-                       [value]="o.id"
-                       [checked]="selected[q.id] === o.id"
-                       (change)="select(q.id, o.id)">
-                <span class="option-text">{{ o.text }}</span>
-              </label>
-            </div>
+            <!-- Compact header with circular index -->
+            <div class="q-header mb-3">
+              <span class="q-index">{{ i + 1 }}</span>
+              <h5 class="mb-0 fw-semibold">{{ q.text }}</h5>
+            </div>
 
-            <!-- Per-question validation (non-blocking) -->
-            <div *ngIf="showErrors && !isAnswered(q.id)" class="text-danger small mt-2">
-              Question not answered
-            </div>
-          </div>
-        </div>
-      </div>
+            <!-- Optional question image -->
+           <img *ngIf="q.imageUrl"
+            [src]="assetUrl(q.imageUrl)"
+            alt="question image"
+            class="img-fluid rounded mb-3"
+            loading="lazy"
+            (error)="($any($event.target).style.display = 'none')">
+            <!-- Objective -->
+            <div *ngIf="isObjective(q)" class="list-group">
+              <label *ngFor="let o of q.options"
+                     class="list-group-item list-group-item-action d-flex align-items-start">
+                <input class="form-check-input me-3 mt-1"
+                       type="radio"
+                       [name]="'q_' + q.id"
+                       [value]="o.id"
+                       [checked]="selectedOptions[q.id] === o.id"
+                       (change)="selectOption(q.id, o.id)">
+                <span class="option-text">{{ o.text }}</span>
+              </label>
+            </div>
 
-      <!-- Submit bar -->
-      <div class="submit-bar shadow-lg rounded-3 mt-5 p-4 bg-body position-sticky bottom-0">
-        <div class="row g-3 align-items-center">
-          <div class="col-12 col-lg-6">
-            <label class="form-label mb-1 small text-muted">Your email (for attempt record)</label>
-            <input type="email"
-                   class="form-control form-control-lg"
-                   placeholder="you@example.com"
-                   [(ngModel)]="email">
-          </div>
-          <div class="col-12 col-lg-6 text-lg-end">
-            <button
-              class="btn btn-success btn-lg px-4"
-              (click)="submit()"
-              [disabled]="!canSubmit || submitting"
-            >
-              <i class="bi bi-check2-circle me-2"></i>
-              {{ submitting ? 'Submitting...' : 'Submit Answers' }}
-            </button>
-          </div>
-        </div>
-      </div>
+            <!-- Subjective -->
+            <div *ngIf="isSubjective(q)" class="mt-2">
+              <label class="form-label small text-muted">Your Answer</label>
+              <textarea
+                class="form-control"
+                rows="4"
+                [(ngModel)]="subjectiveText[q.id]"
+                [ngModelOptions]="{standalone: true}"
+                [class.is-invalid]="showErrors && !isAnswered(q)"
+                placeholder="Type your answer here..."></textarea>
+            </div>
 
-      <!-- Result -->
-      <div
-        *ngIf="result"
-        #scorePanel
-        id="score-panel"
-        class="alert alert-success mt-4 shadow-sm"
-        tabindex="-1"
-        role="status"
-      >
-        <div class="d-flex align-items-center">
-          <i class="bi bi-award fs-3 me-3"></i>
-          <div>
-            <div class="h5 mb-1">Score: {{ result.score }} / {{ result.total }}</div>
-            <div class="small">
-              Answered: <b>{{ answeredCount }}</b> &nbsp;|&nbsp;
-              Unanswered: <b>{{ unansweredCount }}</b>
-            </div>
-          </div>
-        </div>
-      </div>
+            <!-- Per-question validation (non-blocking) -->
+            <div *ngIf="showErrors && !isAnswered(q)" class="text-danger small mt-2">
+              Question not answered
+            </div>
+          </div>
+        </div>
+      </div>
 
-    </div>
-  </div>
+      <!-- Submit bar -->
+      <div class="submit-bar shadow-lg rounded-3 mt-5 p-4 bg-body position-sticky bottom-0">
+        <div class="row g-3 align-items-center">
+          <div class="col-12 col-lg-6">
+            <label class="form-label mb-1 small text-muted">Your email (for attempt record)</label>
+            <input type="email"
+                   class="form-control form-control-lg"
+                   placeholder="you@example.com"
+                   [(ngModel)]="email">
+          </div>
+          <div class="col-12 col-lg-6 text-lg-end">
+            <button class="btn btn-success btn-lg px-4"
+                    (click)="submit()"
+                    [disabled]="!canSubmit || submitting">
+              <i class="bi bi-check2-circle me-2"></i>
+              {{ submitting ? 'Submitting...' : 'Submit Answers' }}
+            </button>
+          </div>
+        </div>
+      </div>
+
+      <!-- Result -->
+      <div *ngIf="result"
+           #scorePanel
+           id="score-panel"
+           class="alert alert-success mt-4 shadow-sm"
+           tabindex="-1"
+           role="status">
+        <div class="d-flex align-items-center">
+          <i class="bi bi-award fs-3 me-3"></i>
+          <div>
+            <div class="h5 mb-1">Score: {{ result.score }} / {{ result.total }}</div>
+            <div class="small">
+              Answered: <b>{{ answeredCount }}</b> &nbsp;|&nbsp;
+              Unanswered: <b>{{ unansweredCount }}</b>
+            </div>
+          </div>
+        </div>
+      </div>
+
+    </div>
+  </div>
 </div>

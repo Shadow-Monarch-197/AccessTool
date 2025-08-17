@@ -1,0 +1,116 @@
+<div class="card shadow-sm">
+  <div class="card-header d-flex justify-content-between align-items-center">
+    <h5 class="mb-0">Create Question</h5>
+    <button class="btn btn-sm btn-outline-primary" (click)="createTest()">+ New Test</button>
+  </div>
+
+  <div class="card-body">
+    <form class="row g-3" (submit)="$event.preventDefault(); save()">
+      <!-- Test -->
+      <div class="col-12 col-md-6">
+        <label class="form-label">Test</label>
+        <select
+          class="form-select"
+          name="testId"
+          [ngModelOptions]="{ standalone: true }"
+          [(ngModel)]="testId">
+          <option [ngValue]="null">Select a test</option>
+          <option *ngFor="let t of tests" [ngValue]="t.id">{{ t.title }}</option>
+        </select>
+      </div>
+
+      <!-- Type -->
+      <div class="col-12 col-md-6">
+        <label class="form-label">Type</label>
+        <div class="d-flex gap-3">
+          <label class="d-inline-flex align-items-center gap-1">
+            <input
+              type="radio"
+              name="qtype"
+              [ngModelOptions]="{ standalone: true }"
+              [(ngModel)]="type"
+              value="objective">
+            Objective
+          </label>
+          <label class="d-inline-flex align-items-center gap-1">
+            <input
+              type="radio"
+              name="qtype"
+              [ngModelOptions]="{ standalone: true }"
+              [(ngModel)]="type"
+              value="subjective">
+            Subjective
+          </label>
+        </div>
+      </div>
+
+      <!-- Question -->
+      <div class="col-12">
+        <label class="form-label">Question</label>
+        <textarea
+          class="form-control"
+          rows="3"
+          name="qtext"
+          [ngModelOptions]="{ standalone: true }"
+          [(ngModel)]="text"
+          placeholder="Enter question text">
+        </textarea>
+      </div>
+
+      <!-- Image -->
+      <div class="col-12 col-md-6">
+        <label class="form-label">Image (optional)</label>
+        <input type="file" class="form-control" (change)="onImg($event)" accept="image/*">
+      </div>
+
+      <!-- Objective options -->
+      <ng-container *ngIf="type === 'objective'">
+        <div class="col-12">
+          <label class="form-label">Options</label>
+        </div>
+
+        <!-- IMPORTANT: trackBy to keep inputs stable -->
+        <div class="col-12 col-md-6"
+             *ngFor="let o of options; let i = index; trackBy: trackByIdx">
+          <div class="input-group">
+            <span class="input-group-text">
+              <input
+                type="radio"
+                name="correct"
+                [checked]="correctIndex === i"
+                (change)="correctIndex = i">
+            </span>
+
+            <input
+              type="text"
+              class="form-control"
+              [attr.name]="'opt' + i"
+              [ngModelOptions]="{ standalone: true }"
+              [(ngModel)]="options[i]"
+              [placeholder]="'Option ' + (i + 1)">
+          </div>
+        </div>
+      </ng-container>
+
+      <!-- Subjective model answer -->
+      <div class="col-12" *ngIf="type === 'subjective'">
+        <label class="form-label">Model Answer (optional)</label>
+        <textarea
+          class="form-control"
+          rows="3"
+          name="modelAnswer"
+          [ngModelOptions]="{ standalone: true }"
+          [(ngModel)]="modelAnswer"
+          placeholder="Reference/model answer">
+        </textarea>
+      </div>
+
+      <!-- Actions -->
+      <div class="col-12 text-end">
+        <button type="button" class="btn btn-success" [disabled]="creating" (click)="save()">
+          {{ creating ? 'Saving...' : 'Add Question' }}
+        </button>
+      </div>
+    </form>
+  </div>
+</div>

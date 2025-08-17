@@ -123,55 +123,66 @@ import { AdminDashboardComponent } from './components/admin-dashboard/admin-dash
 import { LoginComponent } from './components/login/login.component';
 import { UserDashboardComponent } from './components/user-dashboard/user-dashboard.component';
 
+// NEW: import the create-question admin component
+import { AdminCreateQuestionComponent } from './components/quiz/admin-create-question/admin-create-question.component';
+
 import { authGuard, authMatchGuard } from './guards/auth.guard';
 import { adminGuard, adminMatchGuard } from './guards/admin.guard';
 
 const routes: Routes = [
-  { path: '', redirectTo: 'login', pathMatch: 'full' },
+  { path: '', redirectTo: 'login', pathMatch: 'full' },
 
-  // Public
-  { path: 'login', component: LoginComponent },
+  // Public
+  { path: 'login', component: LoginComponent },
 
-  // Admin-only
-  {
-    path: 'admin-dashboard',
-    component: AdminDashboardComponent,
-    canMatch: [adminMatchGuard],
-    canActivate: [adminGuard],
-  },
-  {
-    path: 'admin-upload',
-    component: AdminUploadComponent,
-    canMatch: [adminMatchGuard],
-    canActivate: [adminGuard],
-  },
+  // Admin-only
+  {
+    path: 'admin-dashboard',
+    component: AdminDashboardComponent,
+    canMatch: [adminMatchGuard],
+    canActivate: [adminGuard],
+  },
+  {
+    path: 'admin-upload',
+    component: AdminUploadComponent,
+    canMatch: [adminMatchGuard],
+    canActivate: [adminGuard],
+  },
+  {
+    // NEW: admin create-question route
+    path: 'admin-create-question',
+    component: AdminCreateQuestionComponent,
+    canMatch: [adminMatchGuard],
+    canActivate: [adminGuard],
+  },
 
-  // Authenticated users
-  {
-    path: 'user-dashboard',
-    component: UserDashboardComponent,
-    canMatch: [authMatchGuard],
-    canActivate: [authGuard],
-  },
-  {
-    path: 'tests',
-    component: UserTestsComponent,
-    canMatch: [authMatchGuard],
-    canActivate: [authGuard],
-  },
-  {
-    path: 'take-test/:id',
-    component: TakeTestComponent,
-    canMatch: [authMatchGuard],
-    canActivate: [authGuard],
-  },
+  // Authenticated users
+  {
+    path: 'user-dashboard',
+    component: UserDashboardComponent,
+    canMatch: [authMatchGuard],
+    canActivate: [authGuard],
+  },
+  {
+    path: 'tests',
+    component: UserTestsComponent,
+    canMatch: [authMatchGuard],
+    canActivate: [authGuard],
+  },
+  {
+    path: 'take-test/:id',
+    component: TakeTestComponent,
+    canMatch: [authMatchGuard],
+    canActivate: [authGuard],
+  },
 
-  // Fallback
-  { path: '**', redirectTo: 'login' }
+  // Fallback
+  { path: '**', redirectTo: 'login' }
 ];
 
 @NgModule({
-  imports: [RouterModule.forRoot(routes)],
-  exports: [RouterModule]
+  // CHANGED: enable scroll restoration (optional QoL)
+  imports: [RouterModule.forRoot(routes, { scrollPositionRestoration: 'enabled' })],
+  exports: [RouterModule]
 })
 export class AppRoutingModule {}
