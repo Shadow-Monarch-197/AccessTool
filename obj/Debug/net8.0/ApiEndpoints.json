@@ -89,6 +89,32 @@
   },
   {
     "ContainingType": "quizTool.Controllers.TestsController",
+    "Method": "GetTestAdmin",
+    "RelativePath": "api/Tests/{id}/admin",
+    "HttpMethod": "GET",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [
+      {
+        "Name": "id",
+        "Type": "System.Int32",
+        "IsRequired": true
+      }
+    ],
+    "ReturnTypes": [
+      {
+        "Type": "quizTool.Models.AdminTestDetailDto",
+        "MediaTypes": [
+          "text/plain",
+          "application/json",
+          "text/json"
+        ],
+        "StatusCode": 200
+      }
+    ]
+  },
+  {
+    "ContainingType": "quizTool.Controllers.TestsController",
     "Method": "AddQuestion",
     "RelativePath": "api/Tests/{testId}/questions",
     "HttpMethod": "POST",
@@ -183,6 +209,69 @@
         "StatusCode": 200
       }
     ]
+  },
+  {
+    "ContainingType": "quizTool.Controllers.TestsController",
+    "Method": "GetAttemptDetail",
+    "RelativePath": "api/Tests/attempts/{attemptId}",
+    "HttpMethod": "GET",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [
+      {
+        "Name": "attemptId",
+        "Type": "System.Int32",
+        "IsRequired": true
+      }
+    ],
+    "ReturnTypes": [
+      {
+        "Type": "quizTool.Models.AttemptDetailDto",
+        "MediaTypes": [
+          "text/plain",
+          "application/json",
+          "text/json"
+        ],
+        "StatusCode": 200
+      }
+    ]
+  },
+  {
+    "ContainingType": "quizTool.Controllers.TestsController",
+    "Method": "UpdateAttemptScore",
+    "RelativePath": "api/Tests/attempts/{attemptId}/score",
+    "HttpMethod": "PATCH",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [
+      {
+        "Name": "attemptId",
+        "Type": "System.Int32",
+        "IsRequired": true
+      },
+      {
+        "Name": "body",
+        "Type": "quizTool.Models.UpdateAttemptScoreDto",
+        "IsRequired": true
+      }
+    ],
+    "ReturnTypes": []
+  },
+  {
+    "ContainingType": "quizTool.Controllers.TestsController",
+    "Method": "DeleteQuestion",
+    "RelativePath": "api/Tests/questions/{questionId}",
+    "HttpMethod": "DELETE",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [
+      {
+        "Name": "questionId",
+        "Type": "System.Int32",
+        "IsRequired": true
+      }
+    ],
+    "ReturnTypes": []
   },
   {
     "ContainingType": "quizTool.Controllers.TestsController",

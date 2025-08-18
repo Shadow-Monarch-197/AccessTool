@@ -422,7 +422,7 @@ namespace quizTool.Controllers
 
             if (test == null) return NotFound("Test not found.");
 
-            int totalObjective = test.Questions.Count(q => q.Type == QuestionType.Objective); // NEW
+            int totalQuestions = test.Questions.Count; // NEW
             int score = 0;
 
             var attempt = new TestAttempt
@@ -472,7 +472,7 @@ namespace quizTool.Controllers
             }
 
             attempt.Score = score;
-            attempt.Total = totalObjective;
+            attempt.Total = totalQuestions;
 
             _db.TestAttempts.Add(attempt);
             await _db.SaveChangesAsync();
@@ -481,7 +481,7 @@ namespace quizTool.Controllers
             {
                 AttemptId = attempt.Id,
                 Score = score,
-                Total = totalObjective
+                Total = totalQuestions
             });
         }
 
@@ -500,6 +500,148 @@ namespace quizTool.Controllers
             int idx = 2 + optIndexZeroToThree; // 0->2 (C), 1->3 (D), etc.
             if (row.ItemArray.Length > idx) return row[idx]?.ToString();
             return null;
+        }
+
+        // ================================
+        // VIEW: Admin sees full test (with correct answers/types/images)
+        // GET: /api/Tests/{id}/admin
+        // ================================
+        [Authorize(Roles = "admin")]
+        [HttpGet("{id:int}/admin")]
+        public async Task<ActionResult<AdminTestDetailDto>> GetTestAdmin(int id)
+        {
+            var test = await _db.Tests
+                .Include(t => t.Questions)
+                    .ThenInclude(q => q.Options)
+                .FirstOrDefaultAsync(t => t.Id == id);
+
+            if (test == null) return NotFound();
+
+            var dto = new AdminTestDetailDto
+            {
+                Id = test.Id,
+                Title = test.Title,
+                Questions = test.Questions
+                    .OrderBy(q => q.Id)
+                    .Select(q => new AdminQuestionDto
+                    {
+                        Id = q.Id,
+                        Type = q.Type,
+                        Text = q.Text,
+                        ImageUrl = q.ImageUrl,
+                        ModelAnswer = q.ModelAnswer,
+                        Options = q.Options.OrderBy(o => o.Id).Select(o => new AdminOptionDto
+                        {
+                            Id = o.Id,
+                            Text = o.Text,
+                            IsCorrect = o.IsCorrect
+                        }).ToList()
+                    }).ToList()
+            };
+
+            return Ok(dto);
+        }
+
+        // ================================
+        // DELETE: a question (cascade removes its options & attempt answers)
+        // DELETE: /api/Tests/questions/{questionId}
+        // ================================
+        [Authorize(Roles = "admin")]
+        [HttpDelete("questions/{questionId:int}")]
+        public async Task<IActionResult> DeleteQuestion(int questionId)
+        {
+            var q = await _db.Questions.FirstOrDefaultAsync(x => x.Id == questionId);
+            if (q == null) return NotFound(new { message = "Question not found." });
+
+            _db.Questions.Remove(q);
+            await _db.SaveChangesAsync();
+            return NoContent();
+        }
+
+        // ================================
+        // VIEW: Attempt details (with each answer)
+        // GET: /api/Tests/attempts/{attemptId}
+        // ================================
+        [Authorize(Roles = "admin")]
+        [HttpGet("attempts/{attemptId:int}")]
+        public async Task<ActionResult<AttemptDetailDto>> GetAttemptDetail(int attemptId)
+        {
+            var attempt = await _db.TestAttempts
+                .Include(a => a.Test)
+                .Include(a => a.Answers)
+                .FirstOrDefaultAsync(a => a.Id == attemptId);
+
+            if (attempt == null) return NotFound();
+
+            // For question/option lookups
+            var qIds = attempt.Answers.Select(x => x.QuestionId).Distinct().ToList();
+            var questionMap = await _db.Questions
+                .Include(q => q.Options)
+                .Where(q => qIds.Contains(q.Id))
+                .ToDictionaryAsync(q => q.Id);
+
+            var dto = new AttemptDetailDto
+            {
+                AttemptId = attempt.Id,
+                TestId = attempt.TestId,
+                TestTitle = attempt.Test?.Title ?? $"Test #{attempt.TestId}",
+                UserEmail = attempt.UserEmail,
+                Score = attempt.Score,
+                Total = attempt.Total,
+                AttemptedAt = attempt.AttemptedAt,
+                Answers = new List<AttemptAnswerDetailDto>()
+            };
+
+            foreach (var a in attempt.Answers.OrderBy(x => x.Id))
+            {
+                var q = questionMap[a.QuestionId];
+                var correct = q.Options.FirstOrDefault(o => o.IsCorrect);
+                var selected = a.SelectedOptionId.HasValue
+                    ? q.Options.FirstOrDefault(o => o.Id == a.SelectedOptionId.Value)
+                    : null;
+
+                dto.Answers.Add(new AttemptAnswerDetailDto
+                {
+                    QuestionId = q.Id,
+                    QuestionText = q.Text,
+                    // CHANGED: send a string so Angular template `a.type === 'subjective'` works
+                    Type = (q.Type == QuestionType.Subjective) ? "subjective" : "objective",  // CHANGED
+                    ImageUrl = q.ImageUrl,
+
+                    // Objective fields
+                    SelectedOptionId = a.SelectedOptionId,
+                    SelectedOptionText = selected?.Text,
+                    CorrectOptionId = correct?.Id,
+                    CorrectOptionText = correct?.Text,
+                    IsCorrect = (q.Type == QuestionType.Objective) ? a.IsCorrect : (bool?)null,
+
+                    // Subjective fields
+                    SubjectiveText = a.SubjectiveText,        // CHANGED: deliver student's answer
+                    ModelAnswer = q.ModelAnswer
+                });
+            }
+
+            return Ok(dto);
+        }
+
+        // ================================
+        // UPDATE: Overwrite attempt score (admin review)
+        // PATCH: /api/Tests/attempts/{attemptId}/score
+        // body: { "score": 7 }
+        // ================================
+        [Authorize(Roles = "admin")]
+        [HttpPatch("attempts/{attemptId:int}/score")]
+        public async Task<IActionResult> UpdateAttemptScore(int attemptId, [FromBody] UpdateAttemptScoreDto body)
+        {
+            var attempt = await _db.TestAttempts.FirstOrDefaultAsync(a => a.Id == attemptId);
+            if (attempt == null) return NotFound();
+
+            // clamp score to [0..Total]
+            var newScore = Math.Max(0, Math.Min(body.Score, attempt.Total));
+            attempt.Score = newScore;
+
+            await _db.SaveChangesAsync();
+            return Ok(new { attemptId, score = attempt.Score, total = attempt.Total });
         }
 
     }

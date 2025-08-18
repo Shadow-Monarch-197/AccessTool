@@ -152,5 +152,67 @@
     //    public bool IsCorrect { get; set; }
     //}
 
+    public class AdminTestDetailDto
+    {
+        public int Id { get; set; }
+        public string Title { get; set; } = "";
+        public List<AdminQuestionDto> Questions { get; set; } = new();
+    }
 
+    public class AdminQuestionDto
+    {
+        public int Id { get; set; }
+        public QuestionType Type { get; set; }
+        public string Text { get; set; } = "";
+        public string? ImageUrl { get; set; }
+        public string? ModelAnswer { get; set; }
+        public List<AdminOptionDto> Options { get; set; } = new();
+    }
+
+    public class AdminOptionDto
+    {
+        public int Id { get; set; }
+        public string Text { get; set; } = "";
+        public bool IsCorrect { get; set; }
+    }
+
+    // --- NEW: Attempt details for review ---
+    public class AttemptDetailDto
+    {
+        public int AttemptId { get; set; }
+        public int TestId { get; set; }
+        public string TestTitle { get; set; } = "";
+        public string UserEmail { get; set; } = "";
+        public int Score { get; set; }
+        public int Total { get; set; }
+        public DateTime AttemptedAt { get; set; }
+        public List<AttemptAnswerDetailDto> Answers { get; set; } = new();
+    }
+
+    public class AttemptAnswerDetailDto
+    {
+        public int QuestionId { get; set; }
+        public string QuestionText { get; set; } = "";
+
+        // CHANGED: was QuestionType, now string ('objective' | 'subjective')
+        public string Type { get; set; } = "objective";   // CHANGED
+
+        public string? ImageUrl { get; set; }
+
+        // Objective
+        public int? SelectedOptionId { get; set; }
+        public string? SelectedOptionText { get; set; }
+        public int? CorrectOptionId { get; set; }
+        public string? CorrectOptionText { get; set; }
+        public bool? IsCorrect { get; set; }     // null for subjective
+
+        // Subjective
+        public string? SubjectiveText { get; set; }       // student's free-text
+        public string? ModelAnswer { get; set; }          // optional reference
+    }
+    // --- NEW: score patch body ---
+    public class UpdateAttemptScoreDto
+    {
+        public int Score { get; set; }
+    }
 }
