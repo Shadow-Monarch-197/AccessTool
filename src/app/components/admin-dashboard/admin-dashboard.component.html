@@ -17,6 +17,7 @@
             <th>Email</th>
             <th>Role</th>
             <th>Created Date</th>
+            <th class="text-end">Actions</th>
           </tr>
         </thead>
         <tbody>
@@ -147,6 +148,12 @@
           <td class="text-center">{{ a.percent }}%</td>
                    
           <td>{{ a.attemptedAt | date : "short" }}</td>
+          <td class="text-end">
+      <a class="btn btn-sm btn-outline-primary" [routerLink]="['/attempts', a.id]">
+        Review
+      </a>
+    </td>
+
                  
         </tr>
 

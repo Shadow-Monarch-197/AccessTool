@@ -128,6 +128,9 @@ import { AdminCreateQuestionComponent } from './components/quiz/admin-create-que
 
 import { authGuard, authMatchGuard } from './guards/auth.guard';
 import { adminGuard, adminMatchGuard } from './guards/admin.guard';
+import { AdminTestViewComponent } from './components/quiz/admin-test-view/admin-test-view.component';
+import { AttemptReviewComponent } from './components/quiz/attempt-review/attempt-review.component';
+
 
 const routes: Routes = [
   { path: '', redirectTo: 'login', pathMatch: 'full' },
@@ -175,6 +178,18 @@ const routes: Routes = [
     canMatch: [authMatchGuard],
     canActivate: [authGuard],
   },
+  {
+  path: 'admin-test/:id',
+  component: AdminTestViewComponent,
+  canMatch: [adminMatchGuard],
+  canActivate: [adminGuard],
+},
+{
+  path: 'attempts/:id',
+  component: AttemptReviewComponent,
+  canMatch: [adminMatchGuard],
+  canActivate: [adminGuard],
+},
 
   // Fallback
   { path: '**', redirectTo: 'login' }

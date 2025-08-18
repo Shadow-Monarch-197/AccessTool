@@ -16,6 +16,8 @@ import { AdminUploadComponent } from './components/quiz/admin-upload/admin-uploa
 import { UserTestsComponent } from './components/quiz/user-tests/user-tests.component';
 import { TakeTestComponent } from './components/quiz/take-test/take-test.component';
 import { AdminCreateQuestionComponent } from './components/quiz/admin-create-question/admin-create-question.component';
+import { AdminTestViewComponent } from './components/quiz/admin-test-view/admin-test-view.component';
+import { AttemptReviewComponent } from './components/quiz/attempt-review/attempt-review.component';
 // import { ImportQuestionsComponent } from './components/import-questions/import-questions.component';
 
 @NgModule({
@@ -28,6 +30,8 @@ import { AdminCreateQuestionComponent } from './components/quiz/admin-create-que
     UserTestsComponent,
     TakeTestComponent,
     AdminCreateQuestionComponent,
+    AdminTestViewComponent,
+    AttemptReviewComponent,
     // ImportQuestionsComponent
   ],
   imports: [

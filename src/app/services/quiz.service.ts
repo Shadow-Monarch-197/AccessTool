@@ -96,6 +96,27 @@ getTests() {
   return this.http.get<TestSummary[]>(`${this.base}/Tests`);
 }
 
+// --- Admin: view a test with correct answers/types/images ---
+getAdminTest(id: number) {
+  return this.http.get<any>(`${this.base}/Tests/${id}/admin`);
+}
+
+// --- Admin: delete a single question ---
+deleteQuestion(questionId: number) {
+  return this.http.delete(`${this.base}/Tests/questions/${questionId}`);
+}
+
+// --- Admin: attempt detail (answers + subjective text) ---
+getAttemptDetail(attemptId: number) {
+  return this.http.get<any>(`${this.base}/Tests/attempts/${attemptId}`);
+}
+
+// --- Admin: update attempt score ---
+updateAttemptScore(attemptId: number, score: number) {
+  return this.http.patch<any>(`${this.base}/Tests/attempts/${attemptId}/score`, { score });
+}
+
+
  // ===== NEW admin helpers =====
 
   /** Create an empty test with a title (admin) */
