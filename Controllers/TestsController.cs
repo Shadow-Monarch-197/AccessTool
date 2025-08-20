@@ -12,10 +12,27 @@ using System.Data;
 using System.Linq;
 using System.Text;
 
+public class UploadTestForm
+{
+    public IFormFile File { get; set; } = default!;
+    public string? Title { get; set; }
+}
+
+public class AddQuestionForm
+{
+    public string Type { get; set; } = "objective"; // "objective"|"subjective"
+    public string Text { get; set; } = string.Empty;
+    public string? ModelAnswer { get; set; }         // subjective only
+    public IFormFile? Image { get; set; }            // optional image
+    public string[]? Options { get; set; }           // objective only (repeat 'options' in FormData)
+    public int? CorrectIndex { get; set; }           // 0-based
+}
+
 namespace quizTool.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
+    [Authorize]
     public class TestsController : ControllerBase
     {
         private readonly QuizTool_Dbcontext _db;
@@ -50,9 +67,17 @@ namespace quizTool.Controllers
         // ---------- Admin upload (supports Type + images) ----------
         [Authorize(Roles = "admin")]
         [HttpPost("upload")]
-        public async Task<ActionResult<UploadTestResultDto>> Upload([FromForm] IFormFile file, [FromForm] string? title)
+        [Consumes("multipart/form-data")]    // keep this
+        public async Task<ActionResult<UploadTestResultDto>> Upload([FromForm] UploadTestForm form)
         {
-            if (file == null || file.Length == 0) return BadRequest("No file submitted.");
+
+            // CHANGED: read from the form DTO
+            var file = form.File;
+            var title = form.Title;
+
+            if (file == null || file.Length == 0)
+                return BadRequest("No file submitted.");
+         
 
             var test = new Test
             {
@@ -300,6 +325,7 @@ namespace quizTool.Controllers
         }
 
         // ---------- Get a single test (now includes Type + ImageUrl; never leaks IsCorrect) ----------
+        [Authorize]
         [HttpGet("{id:int}")]
         public async Task<ActionResult<TestDetailDto>> GetTest(int id)
         {
@@ -359,51 +385,52 @@ namespace quizTool.Controllers
             });
         }
 
-        // ---------- Add question to existing test (admin) (NEW) ----------
+        // ---------- Add question to existing test (admin) ----------
         [Authorize(Roles = "admin")]
         [HttpPost("{testId:int}/questions")]
-        public async Task<ActionResult> AddQuestion(
-            int testId,
-            [FromForm] string type,
-            [FromForm] string text,
-            [FromForm] string? modelAnswer,
-            [FromForm] IFormFile? image,
-            [FromForm] string[]? options,     // for objective
-            [FromForm] int? correctIndex      // 0-based
-        )
+        [Consumes("multipart/form-data")] // tell Swagger this is a form with a file
+        public async Task<ActionResult> AddQuestion(int testId, [FromForm] AddQuestionForm form)
         {
             var test = await _db.Tests.FirstOrDefaultAsync(t => t.Id == testId);
             if (test == null) return NotFound("Test not found.");
 
-            var kind = (type ?? "").ToLowerInvariant() == "subjective" ? QuestionType.Subjective : QuestionType.Objective;
+            var kind = (form.Type ?? "").ToLowerInvariant() == "subjective"
+                ? QuestionType.Subjective
+                : QuestionType.Objective;
 
             string? imageUrl = null;
-            if (image != null && image.Length > 0)
+            if (form.Image is not null && form.Image.Length > 0)
             {
-                using var s = image.OpenReadStream();
-                var e = Path.GetExtension(image.FileName);
+                using var s = form.Image.OpenReadStream();
+                var e = Path.GetExtension(form.Image.FileName);
                 imageUrl = SaveImage(s, string.IsNullOrWhiteSpace(e) ? ".png" : e);
             }
 
             var q = new Question
             {
                 TestId = testId,
-                Text = text?.Trim() ?? "",
+                Text = form.Text?.Trim() ?? "",
                 Type = kind,
                 ImageUrl = imageUrl
             };
 
             if (kind == QuestionType.Objective)
             {
-                var opts = options?.Where(o => !string.IsNullOrWhiteSpace(o)).Select(o => o.Trim()).ToList() ?? new();
-                if (opts.Count == 0) return BadRequest("Provide at least one option.");
-                int ci = Math.Clamp(correctIndex ?? 0, 0, Math.Max(0, opts.Count - 1));
+                var opts = (form.Options ?? Array.Empty<string>())
+                    .Where(o => !string.IsNullOrWhiteSpace(o))
+                    .Select(o => o.Trim())
+                    .ToList();
+
+                if (opts.Count == 0)
+                    return BadRequest("Provide at least one option.");
+
+                int ci = Math.Clamp(form.CorrectIndex ?? 0, 0, Math.Max(0, opts.Count - 1));
                 for (int i = 0; i < opts.Count; i++)
                     q.Options.Add(new Option { Text = opts[i], IsCorrect = i == ci });
             }
             else
             {
-                q.ModelAnswer = modelAnswer?.Trim();
+                q.ModelAnswer = form.ModelAnswer?.Trim();
             }
 
             _db.Questions.Add(q);
@@ -411,7 +438,9 @@ namespace quizTool.Controllers
             return Ok(new { questionId = q.Id });
         }
 
+
         // ---------- Submit attempt (subjective stored, objective auto-graded) ----------
+        [Authorize]
         [HttpPost("submit")]
         public async Task<ActionResult<AttemptResultDto>> Submit([FromBody] SubmitAttemptDto dto)
         {

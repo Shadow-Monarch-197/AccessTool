@@ -127,57 +127,32 @@
         "IsRequired": true
       },
       {
-        "Name": "type",
+        "Name": "Type",
         "Type": "System.String",
         "IsRequired": false
       },
       {
-        "Name": "text",
+        "Name": "Text",
         "Type": "System.String",
         "IsRequired": false
       },
       {
-        "Name": "modelAnswer",
+        "Name": "ModelAnswer",
         "Type": "System.String",
         "IsRequired": false
       },
       {
-        "Name": "ContentType",
-        "Type": "System.String",
+        "Name": "Image",
+        "Type": "Microsoft.AspNetCore.Http.IFormFile",
         "IsRequired": false
       },
       {
-        "Name": "ContentDisposition",
-        "Type": "System.String",
-        "IsRequired": false
-      },
-      {
-        "Name": "Headers",
-        "Type": "Microsoft.AspNetCore.Http.IHeaderDictionary",
-        "IsRequired": false
-      },
-      {
-        "Name": "Length",
-        "Type": "System.Int64",
-        "IsRequired": false
-      },
-      {
-        "Name": "Name",
-        "Type": "System.String",
-        "IsRequired": false
-      },
-      {
-        "Name": "FileName",
-        "Type": "System.String",
-        "IsRequired": false
-      },
-      {
-        "Name": "options",
+        "Name": "Options",
         "Type": "System.String[]",
         "IsRequired": false
       },
       {
-        "Name": "correctIndex",
+        "Name": "CorrectIndex",
         "Type": "System.Nullable\u00601[[System.Int32, System.Private.CoreLib, Version=8.0.0.0, Culture=neutral, PublicKeyToken=7cec85d7bea7798e]]",
         "IsRequired": false
       }
@@ -308,37 +283,12 @@
     "Order": 0,
     "Parameters": [
       {
-        "Name": "ContentType",
-        "Type": "System.String",
+        "Name": "File",
+        "Type": "Microsoft.AspNetCore.Http.IFormFile",
         "IsRequired": false
       },
       {
-        "Name": "ContentDisposition",
-        "Type": "System.String",
-        "IsRequired": false
-      },
-      {
-        "Name": "Headers",
-        "Type": "Microsoft.AspNetCore.Http.IHeaderDictionary",
-        "IsRequired": false
-      },
-      {
-        "Name": "Length",
-        "Type": "System.Int64",
-        "IsRequired": false
-      },
-      {
-        "Name": "Name",
-        "Type": "System.String",
-        "IsRequired": false
-      },
-      {
-        "Name": "FileName",
-        "Type": "System.String",
-        "IsRequired": false
-      },
-      {
-        "Name": "title",
+        "Name": "Title",
         "Type": "System.String",
         "IsRequired": false
       }
@@ -379,6 +329,16 @@
         "IsRequired": true
       }
     ],
+    "ReturnTypes": []
+  },
+  {
+    "ContainingType": "quizTool.Controllers.UserController",
+    "Method": "Me",
+    "RelativePath": "api/User/me",
+    "HttpMethod": "GET",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [],
     "ReturnTypes": []
   },
   {
