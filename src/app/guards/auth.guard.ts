@@ -12,17 +12,26 @@
 // }
 
 import { inject } from '@angular/core';
-import { Router, CanActivateFn, CanMatchFn } from '@angular/router';
+import {
+  CanActivateFn,
+  CanMatchFn,
+  Router,
+  UrlTree,
+} from '@angular/router';
 import { AuthService } from '../services/auth.service';
 
-export const authGuard: CanActivateFn = () => {
-  const auth = inject(AuthService);
-  const router = inject(Router);
-  return auth.isLoggedIn() ? true : router.parseUrl('/login');
-};
+function requireLoggedIn(): boolean | UrlTree {
+  const auth = inject(AuthService);
+  const router = inject(Router);
 
-export const authMatchGuard: CanMatchFn = () => {
-  const auth = inject(AuthService);
-  const router = inject(Router);
-  return auth.isLoggedIn() ? true : router.parseUrl('/login');
-};
+  if (!auth.isLoggedIn()) {
+    return router.parseUrl('/login');
+  }
+  return true;
+}
+
+// For route activation (navigating to a component)
+export const authGuard: CanActivateFn = () => requireLoggedIn();
+
+// For route matching (e.g., guarding the route from being selected)
+export const authMatchGuard: CanMatchFn = (_route, _segments) => requireLoggedIn();

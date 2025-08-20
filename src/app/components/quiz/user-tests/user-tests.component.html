@@ -1,4 +1,4 @@
-<div class="container py-4">
+<!-- <div class="container py-4">
   <div class="row justify-content-center">
     <div class="col-lg-8 col-md-10">
 
@@ -20,7 +20,6 @@
         </div>
       </div>
 
-      <!-- No tests available -->
       <ng-template #noTests>
         <div class="alert alert-info shadow-sm">
           <i class="bi bi-info-circle me-2"></i> No tests available at the moment.
@@ -30,4 +29,35 @@
     </div>
   </div>
 </div>
+ -->
 
+
+ <div class="container py-5">
+  <div class="text-center mb-4">
+    <img src="assets/illustrations/secure-docs.svg" alt="" style="height:80px" class="mb-2">
+    <h2 class="h-title">Available Tests</h2>
+    <p class="text-muted">Pick a test and get started.</p>
+  </div>
+
+  <div class="row justify-content-center">
+    <div class="col-lg-8 col-md-10">
+      <div *ngIf="tests && tests.length; else noTests" class="vstack gap-3">
+        <div *ngFor="let t of tests" class="glass p-3 d-flex align-items-center justify-content-between">
+          <div>
+            <div class="fw-semibold">{{ t.title }}</div>
+            <small class="text-muted">{{ t.questionCount }} Questions</small>
+          </div>
+          <button class="btn btn-success" (click)="start(t.id)">
+            <i class="bi bi-play-fill me-1"></i> Start
+          </button>
+        </div>
+      </div>
+
+      <ng-template #noTests>
+        <div class="alert alert-info shadow-soft">
+          <i class="bi bi-info-circle me-2"></i>No tests available at the moment.
+        </div>
+      </ng-template>
+    </div>
+  </div>
+</div>

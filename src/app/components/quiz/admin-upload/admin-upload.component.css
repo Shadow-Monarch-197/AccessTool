@@ -22,3 +22,15 @@
 .alert {
   border-radius: 6px;
 }
+
+.card{ border:1px solid #eef; border-radius:16px; }
+.list-group-item{ border: none; border-bottom:1px solid #f1f5f9; }
+
+
+/* Give the list some breathing room */
+.test-list .list-group-item {
+  border-color: #eef2f7;
+}
+.test-list .card-header {
+  border-bottom-color: #eef2f7;
+}

@@ -26,3 +26,35 @@ button.btn {
 }
 
 .table td, .table th{vertical-align: middle;}
+
+.admin-dashboard .table{ border-radius:16px; overflow:hidden; }
+.link-wrapper .upload-link{ position: fixed; right: 20px; bottom: 20px; border-radius: 999px; }
+.card{ border:1px solid #eef; border-radius:16px; }
+
+
+/* Navbar look */
+.app-nav {
+  background: #ffffff;
+}
+.app-nav .navbar-brand {
+  color: #1d4ed8;
+}
+.app-nav .nav-link {
+  color: #334155;
+  font-weight: 500;
+}
+.app-nav .nav-link:hover {
+  color: #1d4ed8;
+  text-decoration: none;
+}
+.app-nav .btn-danger {
+  box-shadow: 0 8px 22px rgba(220, 53, 69, 0.25);
+}
+
+/* Tables/cards */
+.admin-dashboard .table {
+  margin: 0;
+}
+.attempts-card .table {
+  margin: 0;
+}

@@ -1,4 +1,4 @@
-.card {
+/* .card {
   border-radius: 12px;
   background-color: #f8f9fa;
 }
@@ -14,4 +14,7 @@ button {
 
 .text-danger {
   font-size: 0.875rem;
-}
+} */
+
+:host ::ng-deep .auth-wrap .card{ border: none; }
+:host ::ng-deep .input-group .form-control{ box-shadow: none; }

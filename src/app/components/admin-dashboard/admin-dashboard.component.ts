@@ -31,9 +31,11 @@
 
 import { Component, OnInit } from '@angular/core';
 import { UserService } from 'src/app/services/user.service';
+import { AuthService } from 'src/app/services/auth.service';    
 // NEW
 import { QuizService } from 'src/app/services/quiz.service';
 import { AttemptListItem, TestSummary } from 'src/app/services/quiz.service'; // adjust path if you keep types elsewhere
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-admin-dashboard',
@@ -55,7 +57,10 @@ attemptsLoaded = false;
   constructor(
     private userService: UserService,
     // NEW
-    private quiz: QuizService
+    private quiz: QuizService,
+    private auth: AuthService,
+     private router: Router     
+
   ) {}
 
   ngOnInit(): void {
@@ -76,6 +81,11 @@ attemptsLoaded = false;
 //       }
 //     });
 //   }
+
+  logout() {                                  // NEW
+    this.auth.logout();
+    this.router.navigate(['/login']);
+  }
 
   getAllUsers(){
     this.userService.getallusers().subscribe({
@@ -130,3 +140,5 @@ attemptsLoaded = false;
   // NEW (handy for display)
   trackByAttempt = (_: number, a: AttemptListItem) => a.id;
 }
+
+

@@ -1,16 +1,20 @@
-<div class="card shadow-sm">
+<div class="card shadow create-q">
   <div class="card-header d-flex justify-content-between align-items-center">
-    <h5 class="mb-0">Create Question</h5>
-    <button class="btn btn-sm btn-outline-primary" (click)="createTest()">+ New Test</button>
+    <h5 class="mb-0 fw-semibold">
+      <i class="bi bi-magic me-2"></i> Create Question
+    </h5>
+    <button class="btn btn-sm btn-outline-primary rounded-pill" (click)="createTest()">
+      + New Test
+    </button>
   </div>
 
   <div class="card-body">
-    <form class="row g-3" (submit)="$event.preventDefault(); save()">
+    <form class="row g-4" (submit)="$event.preventDefault(); save()">
       <!-- Test -->
-      <div class="col-12 col-md-6">
-        <label class="form-label">Test</label>
+      <div class="col-12 col-lg-6">
+        <label class="form-label fw-semibold">Test</label>
         <select
-          class="form-select"
+          class="form-select form-select-lg nice-input"
           name="testId"
           [ngModelOptions]="{ standalone: true }"
           [(ngModel)]="testId">
@@ -20,70 +24,76 @@
       </div>
 
       <!-- Type -->
-      <div class="col-12 col-md-6">
-        <label class="form-label">Type</label>
-        <div class="d-flex gap-3">
-          <label class="d-inline-flex align-items-center gap-1">
-            <input
-              type="radio"
-              name="qtype"
-              [ngModelOptions]="{ standalone: true }"
-              [(ngModel)]="type"
-              value="objective">
-            Objective
+      <div class="col-12 col-lg-6">
+        <label class="form-label fw-semibold d-block">Type</label>
+
+        <!-- Same radios, just styled as pills -->
+        <div class="btn-group type-toggle" role="group" aria-label="Question type">
+          <input
+            type="radio"
+            class="btn-check"
+            id="typeObjective"
+            name="qtype"
+            [ngModelOptions]="{ standalone: true }"
+            [(ngModel)]="type"
+            value="objective">
+          <label class="btn btn-outline-primary" for="typeObjective">
+            <i class="bi bi-list-check me-1"></i> Objective
           </label>
-          <label class="d-inline-flex align-items-center gap-1">
-            <input
-              type="radio"
-              name="qtype"
-              [ngModelOptions]="{ standalone: true }"
-              [(ngModel)]="type"
-              value="subjective">
-            Subjective
+
+          <input
+            type="radio"
+            class="btn-check"
+            id="typeSubjective"
+            name="qtype"
+            [ngModelOptions]="{ standalone: true }"
+            [(ngModel)]="type"
+            value="subjective">
+          <label class="btn btn-outline-primary" for="typeSubjective">
+            <i class="bi bi-pencil-square me-1"></i> Subjective
           </label>
         </div>
       </div>
 
       <!-- Question -->
       <div class="col-12">
-        <label class="form-label">Question</label>
+        <label class="form-label fw-semibold">Question</label>
         <textarea
-          class="form-control"
-          rows="3"
+          class="form-control nice-input"
+          rows="4"
           name="qtext"
           [ngModelOptions]="{ standalone: true }"
           [(ngModel)]="text"
-          placeholder="Enter question text">
-        </textarea>
+          placeholder="Enter question text"></textarea>
       </div>
 
       <!-- Image -->
-      <div class="col-12 col-md-6">
-        <label class="form-label">Image (optional)</label>
-        <input type="file" class="form-control" (change)="onImg($event)" accept="image/*">
+      <div class="col-12 col-lg-6">
+        <label class="form-label fw-semibold">Image (optional)</label>
+        <input type="file" class="form-control nice-input" (change)="onImg($event)" accept="image/*">
+        <div class="form-text">PNG / JPG / GIF</div>
       </div>
 
       <!-- Objective options -->
       <ng-container *ngIf="type === 'objective'">
         <div class="col-12">
-          <label class="form-label">Options</label>
+          <label class="form-label fw-semibold">Options</label>
         </div>
 
-        <!-- IMPORTANT: trackBy to keep inputs stable -->
-        <div class="col-12 col-md-6"
-             *ngFor="let o of options; let i = index; trackBy: trackByIdx">
-          <div class="input-group">
-            <span class="input-group-text">
+        <!-- Keep your trackBy & bindings exactly the same -->
+        <div class="col-12 col-md-6" *ngFor="let o of options; let i = index; trackBy: trackByIdx">
+          <div class="input-group option-input">
+            <span class="input-group-text radio-wrap">
               <input
                 type="radio"
+                class="form-check-input"
                 name="correct"
                 [checked]="correctIndex === i"
                 (change)="correctIndex = i">
             </span>
-
             <input
               type="text"
-              class="form-control"
+              class="form-control nice-input"
               [attr.name]="'opt' + i"
               [ngModelOptions]="{ standalone: true }"
               [(ngModel)]="options[i]"
@@ -94,21 +104,22 @@
 
       <!-- Subjective model answer -->
       <div class="col-12" *ngIf="type === 'subjective'">
-        <label class="form-label">Model Answer (optional)</label>
+        <label class="form-label fw-semibold">Model Answer (optional)</label>
         <textarea
-          class="form-control"
+          class="form-control nice-input"
           rows="3"
           name="modelAnswer"
           [ngModelOptions]="{ standalone: true }"
           [(ngModel)]="modelAnswer"
-          placeholder="Reference/model answer">
-        </textarea>
+          placeholder="Reference/model answer"></textarea>
       </div>
 
       <!-- Actions -->
-      <div class="col-12 text-end">
-        <button type="button" class="btn btn-success" [disabled]="creating" (click)="save()">
-          {{ creating ? 'Saving...' : 'Add Question' }}
+      <div class="col-12 d-flex justify-content-end pt-2">
+        <button type="button" class="btn btn-success px-4 btn-lg rounded-3"
+                [disabled]="creating" (click)="save()">
+          <i class="bi bi-check2-circle me-1"></i>
+          {{ creating ? 'Saving…' : 'Add Question' }}
         </button>
       </div>
     </form>

@@ -139,6 +139,14 @@ export class LoginComponent implements OnInit {
       password: ['', [Validators.required]]
     });
 
+  // src/app/components/login/login.component.ts (inside ngOnInit)
+      const token = localStorage.getItem('token');
+      const role  = (localStorage.getItem('role') || '').toLowerCase();
+      if (token) {
+        this.router.navigate([role === 'admin' ? '/admin-dashboard' : '/user-dashboard']);
+      }
+
+
     // NEW: Optional – if a logged-in user hits /login, send them away nicely
     // const token = localStorage.getItem('token');
     // const role = (localStorage.getItem('role') || '').toLowerCase();

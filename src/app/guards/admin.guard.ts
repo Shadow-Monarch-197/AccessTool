@@ -11,19 +11,28 @@
 //   }
 // }
 
-// admin.guard.ts
 import { inject } from '@angular/core';
-import { Router, CanActivateFn, CanMatchFn } from '@angular/router';
+import {
+  CanActivateFn,
+  CanMatchFn,
+  Router,
+  UrlTree,
+} from '@angular/router';
 import { AuthService } from '../services/auth.service';
 
-export const adminGuard: CanActivateFn = () => {
-  const auth = inject(AuthService);
-  const router = inject(Router);
-  return (auth.isLoggedIn() && auth.getRole() === 'admin') ? true : router.parseUrl('/login');
-};
+function requireAdmin(): boolean | UrlTree {
+  const auth = inject(AuthService);
+  const router = inject(Router);
 
-export const adminMatchGuard: CanMatchFn = () => {
-  const auth = inject(AuthService);
-  const router = inject(Router);
-  return (auth.isLoggedIn() && auth.getRole() === 'admin') ? true : router.parseUrl('/login');
-};
+  if (!auth.isLoggedIn()) {
+    return router.parseUrl('/login');
+  }
+  if (auth.getRole() !== 'admin') {
+    // not an admin => kick to login (or use '/user-dashboard' if you prefer)
+    return router.parseUrl('/login');
+  }
+  return true;
+}
+
+export const adminGuard: CanActivateFn = () => requireAdmin();
+export const adminMatchGuard: CanMatchFn = (_route, _segments) => requireAdmin();
